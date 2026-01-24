@@ -1135,7 +1135,7 @@ def make_final_solution(
         + solution_prefix
         + "_"
         + "Signatures.txt",
-        "\t",
+        sep="\t",
         float_format="%.8f",
         index_label=[processes.columns.name],
     )
@@ -1153,7 +1153,7 @@ def make_final_solution(
             + solution_prefix
             + "_"
             + "Activities_refit.txt",
-            "\t",
+            sep="\t",
             index_label=[exposures.columns.name],
         )
     else:
@@ -1164,7 +1164,7 @@ def make_final_solution(
             + solution_prefix
             + "_"
             + "Activities.txt",
-            "\t",
+            sep="\t",
             index_label=[exposures.columns.name],
         )
 
@@ -1234,9 +1234,9 @@ def make_final_solution(
     all_similarities, cosine_similarities = calculate_similarities(
         allgenomes, est_genomes, allcolnames
     )
-    all_similarities.iloc[:, [3, 5]] = (
-        all_similarities.iloc[:, [3, 5]].astype(str) + "%"
-    )
+    # Convert columns to string with "%" suffix, using column names to avoid dtype conflicts in Python 3.12
+    all_similarities["L1_Norm_%"] = all_similarities["L1_Norm_%"].astype(str) + "%"
+    all_similarities["L2_Norm_%"] = all_similarities["L2_Norm_%"].astype(str) + "%"
 
     if refit_denovo_signatures:
         all_similarities.to_csv(
@@ -1268,7 +1268,7 @@ def make_final_solution(
                 + solution_prefix
                 + "_"
                 + "Signatures_SEM_Error.txt",
-                "\t",
+                sep="\t",
                 float_format="%.2E",
                 index_label=[processes.columns.name],
             )
@@ -1285,7 +1285,7 @@ def make_final_solution(
                 + solution_prefix
                 + "_"
                 + "Signatures_Stats.txt",
-                "\t",
+                sep="\t",
                 index_label=[exposures.columns.name],
             )
             signature_total_mutations = np.sum(exposureAvg, axis=1).astype(int)
@@ -1464,7 +1464,7 @@ def make_final_solution(
                     + "/Activities"
                     + "/"
                     + "De_Novo_MutationType_Probabilities_refit.txt",
-                    "\t",
+                    sep="\t",
                 )
             else:
                 probability.to_csv(
@@ -1472,7 +1472,7 @@ def make_final_solution(
                     + "/Activities"
                     + "/"
                     + "De_Novo_MutationType_Probabilities.txt",
-                    "\t",
+                    sep="\t",
                 )
         if not denovo_refit_option:
             probability.to_csv(
@@ -1480,7 +1480,7 @@ def make_final_solution(
                 + "/Activities"
                 + "/"
                 + "Decomposed_MutationType_Probabilities.txt",
-                "\t",
+                sep="\t",
             )
 
     if export_probabilities_per_mutation:
@@ -1526,7 +1526,7 @@ def make_final_solution(
                             + "_"
                             + sample
                             + ".txt",
-                            "\t",
+                            sep="\t",
                         )
                 else:
                     print(
