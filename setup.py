@@ -6,7 +6,7 @@ import os
 if os.path.exists("dist"):
     shutil.rmtree("dist")
 
-VERSION = "1.1.2"
+VERSION = "1.1.3"
 
 
 def write_version_py(filename="SigProfilerAssignment/version.py"):
@@ -15,7 +15,7 @@ def write_version_py(filename="SigProfilerAssignment/version.py"):
 # THIS FILE IS GENERATED FROM SigProfilerAssignment SETUP.PY
 short_version = '%(version)s'
 version = '%(version)s'
-Update = 'v1.1.2: Fixed to_csv() calls for Python 3.12 compatibility'
+Update = 'v1.1.3: Fixed set_index() calls for Python 3.12 StringArray compatibility'
 
     """
     fh = open(filename, "w")
