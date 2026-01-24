@@ -43,9 +43,9 @@ def plotSBS(
     buff_list = dict()
     if plot_type == "96":
         first_line = matrix_path.iloc[0, :]
-        if first_line[0][1] == ">":
+        if first_line.iloc[0][1] == ">":
             pcawg = True
-        if first_line[0][5] != "]" and first_line[0][1] != ">":
+        if first_line.iloc[0][5] != "]" and first_line.iloc[0][1] != ">":
             sys.exit(
                 "The matrix does not match the correct SBS96 format. Please check you formatting and rerun this plotting function."
             )
@@ -76,23 +76,23 @@ def plotSBS(
             if pcawg:
                 line = matrix_path.iloc[lines_tmp, :]
                 # line = lines.strip().split(",")
-                mut_type = line[0]
-                nuc = line[1][0] + "[" + mut_type + "]" + line[1][2]
+                mut_type = line.iloc[0]
+                nuc = line.iloc[1][0] + "[" + mut_type + "]" + line.iloc[1][2]
                 sample_index = 2
             else:
                 line = matrix_path.iloc[lines_tmp, :]
                 # line = lines.strip().split()
-                nuc = line[0]
-                mut_type = line[0][2:5]
+                nuc = line.iloc[0]
+                mut_type = line.iloc[0][2:5]
                 sample_index = 1
 
             for sample in samples:
                 if percentage:
-                    mutCount = float(line[sample_index])
+                    mutCount = float(line.iloc[sample_index])
                     if mutCount < 1 and mutCount > 0:
                         sig_probs = True
                 else:
-                    mutCount = int(line[sample_index])
+                    mutCount = int(line.iloc[sample_index])
                 mutations[sample][mut_type][nuc] = mutCount
                 sample_index += 1
 
@@ -492,12 +492,12 @@ def plotSBS(
 
     elif plot_type == "192" or plot_type == "96SB" or plot_type == "384":
         first_line = matrix_path.iloc[0, :]
-        if first_line[0][6] == ">" or first_line[0][3] == ">":
+        if first_line.iloc[0][6] == ">" or first_line.iloc[0][3] == ">":
             pcawg = True
         if (
-            first_line[0][7] != "]"
-            and first_line[0][6] != ">"
-            and first_line[0][3] != ">"
+            first_line.iloc[0][7] != "]"
+            and first_line.iloc[0][6] != ">"
+            and first_line.iloc[0][3] != ">"
         ):
             sys.exit(
                 "The matrix does not match the correct SBS192 format. Please check you formatting and rerun this plotting function."
@@ -530,25 +530,25 @@ def plotSBS(
                 bias = line[0][0]
             else:
                 line = matrix_path.iloc[lines_tmp, :]
-                nuc = line[0][2:]
-                bias = line[0][0]
+                nuc = line.iloc[0][2:]
+                bias = line.iloc[0][0]
             if bias == "N" or bias == "B":
                 continue
             else:
                 if pcawg:
-                    mut_type = line[1]
+                    mut_type = line.iloc[1]
                     sample_index = 3
                 else:
-                    mut_type = line[0][4:7]
+                    mut_type = line.iloc[0][4:7]
                     sample_index = 1
 
                 for sample in samples:
                     if percentage:
-                        mutCount = float(line[sample_index])
+                        mutCount = float(line.iloc[sample_index])
                         if mutCount < 1 and mutCount > 0:
                             sig_probs = True
                     else:
-                        mutCount = int(line[sample_index])
+                        mutCount = int(line.iloc[sample_index])
                     if nuc not in mutations[sample][mut_type].keys():
                         mutations[sample][mut_type][nuc] = [0, 0]
                     if bias == "T":
@@ -1024,11 +1024,11 @@ def plotSBS(
 
                     for sample in samples:
                         if percentage:
-                            mutCount = float(line[sample_index])
+                            mutCount = float(line.iloc[sample_index])
                             if mutCount < 1 and mutCount > 0:
                                 sig_probs = True
                         else:
-                            mutCount = int(line[sample_index])
+                            mutCount = int(line.iloc[sample_index])
                         mutations[sample][mut_type] = mutCount
                         sample_index += 1
 
@@ -1251,11 +1251,11 @@ def plotSBS(
                         sample_index = 1
                         for sample in samples:
                             if percentage:
-                                mutCount = float(line[sample_index])
+                                mutCount = float(line.iloc[sample_index])
                                 if mutCount < 1 and mutCount > 0:
                                     sig_probs = True
                             else:
-                                mutCount = int(line[sample_index])
+                                mutCount = int(line.iloc[sample_index])
                             if bias == "T":
                                 mutations[sample][nuc][0] = mutCount
                             else:
@@ -1463,12 +1463,12 @@ def plotSBS(
 
     elif plot_type == "288":
         first_line = matrix_path.iloc[0, :]
-        if first_line[0][6] == ">" or first_line[0][3] == ">":
+        if first_line.iloc[0][6] == ">" or first_line.iloc[0][3] == ">":
             pcawg = True
         if (
-            first_line[0][7] != "]"
-            and first_line[0][6] != ">"
-            and first_line[0][3] != ">"
+            first_line.iloc[0][7] != "]"
+            and first_line.iloc[0][6] != ">"
+            and first_line.iloc[0][3] != ">"
         ):
             sys.exit(
                 "The matrix does not match the correct SBS288 format. Please check you formatting and rerun this plotting function."
@@ -1508,24 +1508,24 @@ def plotSBS(
         for lines_tmp in range(0, matrix_path.shape[0]):
             if pcawg:
                 line = matrix_path.iloc[lines_tmp, :]
-                mut_type = line[0]
-                nuc = line[1][0] + "[" + mut_type + "]" + line[1][2]
+                mut_type = line.iloc[0]
+                nuc = line.iloc[1][0] + "[" + mut_type + "]" + line.iloc[1][2]
                 sample_index = 2
             else:
                 line = matrix_path.iloc[lines_tmp, :]
-                nuc = line[0]
-                mut_type = line[0][4:7]
+                nuc = line.iloc[0]
+                mut_type = line.iloc[0][4:7]
                 sample_index = 1
                 tsb = nuc[0]
 
             for sample in samples:
                 if percentage:
-                    mutCount = float(line[sample_index])
+                    mutCount = float(line.iloc[sample_index])
                     if mutCount < 1 and mutCount > 0:
                         sig_probs = True
                 else:
                     try:
-                        mutCount = int(line[sample_index])
+                        mutCount = int(line.iloc[sample_index])
                     except:
                         print(
                             "It appears that the provided matrix does not contain mutation counts.\n\tIf you have provided a signature activity matrix, please change the percentage parameter to True.\n\tOtherwise, ",
@@ -2068,9 +2068,9 @@ def plotSBS(
     ###########################################################################################################################
     elif plot_type == "1536":
         first_line = matrix_path.iloc[0, :]
-        if first_line[0][1] == ">":
+        if first_line.iloc[0][1] == ">":
             pcawg = True
-        if first_line[0][6] != "]" and first_line[0][1] != ">":
+        if first_line.iloc[0][6] != "]" and first_line.iloc[0][1] != ">":
             sys.exit(
                 "The matrix does not match the correct SBS1536 format. Please check you formatting and rerun this plotting function."
             )
@@ -2367,23 +2367,23 @@ def plotSBS(
                 sample_index = 2
             else:
                 line = matrix_path.iloc[lines_tmp, :]
-                nuc = line[0]
-                mut_type = line[0][3:6]
-                penta_key = line[0][0] + line[0][-1]
-                tri_key = line[0][1] + line[0][-2]
+                nuc = line.iloc[0]
+                mut_type = line.iloc[0][3:6]
+                penta_key = line.iloc[0][0] + line.iloc[0][-1]
+                tri_key = line.iloc[0][1] + line.iloc[0][-2]
                 sample_index = 1
 
-                tri = line[0][1:8]
+                tri = line.iloc[0][1:8]
 
             for sample in samples:
                 if tri not in mutations_96[sample][mut_type]:
                     mutations_96[sample][mut_type][tri] = 0
                 if percentage:
-                    mutCount = float(line[sample_index])
+                    mutCount = float(line.iloc[sample_index])
                     if mutCount < 1 and mutCount > 0:
                         sig_probs = True
                 else:
-                    mutCount = int(line[sample_index])
+                    mutCount = int(line.iloc[sample_index])
 
                 if pcawg:
                     sample_ref = sample_index - 2
@@ -3362,14 +3362,14 @@ def plotID(
         or plot_type == "83"
     ):
         first_line = matrix_path.iloc[0, :]
-        if first_line[0][1] == "D" or first_line[0][0] == "D":
+        if first_line.iloc[0][1] == "D" or first_line.iloc[0][0] == "D":
             pcawg = True
-        mutation_type = first_line[0]
+        mutation_type = first_line.iloc[0]
         mutation_type_list = mutation_type.split(":")
         if (
             len(mutation_type_list) != 4
-            and first_line[0][1] != "D"
-            and first_line[0][0] != "D"
+            and first_line.iloc[0][1] != "D"
+            and first_line.iloc[0][0] != "D"
         ):
             sys.exit(
                 "The matrix does not match the correct ID96 format. Please check you formatting and rerun this plotting function."
@@ -3522,9 +3522,9 @@ def plotID(
                 sample_index = 4
             else:
                 line = matrix_path.iloc[lines_tmp, :]
-                if line[0] not in indel_types:
+                if line.iloc[0] not in indel_types:
                     continue
-                categories = line[0].split(":")
+                categories = line.iloc[0].split(":")
                 mut_type = categories[0] + categories[1] + categories[2]
                 repeat_size = int(categories[3])
                 if categories[2] == "M":
@@ -3534,11 +3534,11 @@ def plotID(
             for sample in samples:
                 if mut_type in mutations[sample].keys():
                     if percentage:
-                        mutCount = float(line[sample_index])
+                        mutCount = float(line.iloc[sample_index])
                         if mutCount < 1 and mutCount > 0:
                             sig_probs = True
                     else:
-                        mutCount = int(line[sample_index])
+                        mutCount = int(line.iloc[sample_index])
                     mutations[sample][mut_type][repeat_size] = mutCount
                 else:
                     continue
@@ -4601,11 +4601,11 @@ def plotID(
                     for sample in samples:
                         # if mut_type in mutations[sample].keys():
                         if percentage:
-                            mutCount = float(line[sample_index])
+                            mutCount = float(line.iloc[sample_index])
                             if mutCount < 1 and mutCount > 0:
                                 sig_probs = True
                         else:
-                            mutCount = int(line[sample_index])
+                            mutCount = int(line.iloc[sample_index])
                         mutations[sample][mut_type][repeat_size] = mutCount
 
                         # else:
@@ -5369,11 +5369,11 @@ def plotID(
                     for sample in samples:
                         if mut_type in mutations[sample].keys():
                             if percentage:
-                                mutCount = float(line[sample_index])
+                                mutCount = float(line.iloc[sample_index])
                                 if mutCount < 1 and mutCount > 0:
                                     sig_probs = True
                             else:
-                                mutCount = int(line[sample_index])
+                                mutCount = int(line.iloc[sample_index])
                             if bias == "T":
                                 mutations[sample][mut_type][repeat_size][0] = mutCount
                             else:
@@ -6198,10 +6198,10 @@ def plotDBS(
 
     if plot_type == "78" or plot_type == "78DBS" or plot_type == "DBS78":
         first_line = matrix_path.iloc[0, :]
-        mutation_type = first_line[0]
-        if first_line[0][2] != ">":
+        mutation_type = first_line.iloc[0]
+        if first_line.iloc[0][2] != ">":
             pcawg = True
-        if len(mutation_type) != 5 and first_line[0][2] == ">":
+        if len(mutation_type) != 5 and first_line.iloc[0][2] == ">":
             sys.exit(
                 "The matrix does not match the correct DBS96 format. Please check you formatting and rerun this plotting function."
             )
@@ -6326,9 +6326,9 @@ def plotDBS(
                 sample_index = 2
             else:
                 line = matrix_path.iloc[lines_tmp, :]
-                mut = line[0]
-                nuc = line[0][3:]
-                mut_type = line[0][0:2]
+                mut = line.iloc[0]
+                nuc = line.iloc[0][3:]
+                mut_type = line.iloc[0][0:2]
                 if mut not in dinucs:
                     nuc = revcompl(nuc)
                     mut_type = revcompl(mut_type)
@@ -6336,11 +6336,11 @@ def plotDBS(
 
             for sample in samples:
                 if percentage:
-                    mutCount = float(line[sample_index])
+                    mutCount = float(line.iloc[sample_index])
                     if mutCount < 1 and mutCount > 0:
                         sig_probs = True
                 else:
-                    mutCount = int(line[sample_index])
+                    mutCount = int(line.iloc[sample_index])
                 mutations[sample][mut_type][nuc] = mutCount
                 sample_index += 1
 
@@ -6942,11 +6942,11 @@ def plotDBS(
 
                     for sample in samples:
                         if percentage:
-                            mutCount = float(line[sample_index])
+                            mutCount = float(line.iloc[sample_index])
                             if mutCount < 1 and mutCount > 0:
                                 sig_probs = True
                         else:
-                            mutCount = int(line[sample_index])
+                            mutCount = int(line.iloc[sample_index])
                         if nuc not in mutations[sample][mut_type]:
                             mutations[sample][mut_type][nuc] = [0, 0]
                         if bias == "T":

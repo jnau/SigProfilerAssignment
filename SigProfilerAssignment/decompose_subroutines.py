@@ -1234,9 +1234,9 @@ def make_final_solution(
     all_similarities, cosine_similarities = calculate_similarities(
         allgenomes, est_genomes, allcolnames
     )
-    all_similarities.iloc[:, [3, 5]] = (
-        all_similarities.iloc[:, [3, 5]].astype(str) + "%"
-    )
+    # Convert columns to string with "%" suffix, using column names to avoid dtype conflicts in Python 3.12
+    all_similarities["L1_Norm_%"] = all_similarities["L1_Norm_%"].astype(str) + "%"
+    all_similarities["L2_Norm_%"] = all_similarities["L2_Norm_%"].astype(str) + "%"
 
     if refit_denovo_signatures:
         all_similarities.to_csv(

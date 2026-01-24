@@ -255,11 +255,11 @@ def plot_7_plus(bases, project, c_draw, denovo_plots_dict, basis_plots_dict):
 # 	c_draw 		- (Canvas) The canvas to draw the graph decomposition on.
 # 	statistics 	- (Pandas Dataframe) Dataframe w/ calculations
 def draw_statistics(c_draw, statistics, sig_version, custom_text):
-    cos_sim = statistics["Cosine Similarity"][0]
-    cor_coeff = statistics["Correlation Coefficient"][0]
-    l1_norm_percent = statistics["L1 Norm %"][0]
-    l2_norm_percent = statistics["L2 Norm %"][0]
-    kl_divergence = statistics["KL Divergence"][0]
+    cos_sim = statistics["Cosine Similarity"].iloc[0]
+    cor_coeff = statistics["Correlation Coefficient"].iloc[0]
+    l1_norm_percent = statistics["L1 Norm %"].iloc[0]
+    l2_norm_percent = statistics["L2 Norm %"].iloc[0]
+    kl_divergence = statistics["KL Divergence"].iloc[0]
 
     c_draw.drawString(
         WIDTH_GAP + 15,

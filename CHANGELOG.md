@@ -8,7 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [1.1.2] - 2026-01-23
 ### Fixed
-- Fixed `to_csv()` calls to use keyword arguments (`sep="\t"`) instead of positional arguments for Python 3.12 compatibility. This ensures compatibility with newer pandas versions that enforce keyword-only arguments.
+- Fixed Python 3.12 compatibility issues with pandas DataFrame/Series indexing and method calls:
+  - Updated `to_csv()` calls to use keyword arguments (`sep="\t"`) instead of positional arguments
+  - Changed DataFrame/Series index access from `[0]` to `.iloc[0]` throughout the codebase
+  - Fixed dtype assignment when converting columns to strings with "%" suffix
 
 ### Changed
 - Switched CI/CD from Travis CI to GitHub Actions. Updated README badge to reflect the new CI/CD platform.
