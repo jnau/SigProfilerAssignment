@@ -577,7 +577,18 @@ def spa_analyze(
             listOfSignatures = devopts["listOfSignatures"]
             index = devopts["index"]
             colnames = devopts["colnames"]
-            genomes = genomes.set_index(index)
+            # Convert index to list to handle StringArray compatibility in Python 3.12+
+            # StringArray is unhashable and cannot be used directly with set_index
+            if isinstance(index, str):
+                # If it's a column name, use as is
+                index_list = index
+            elif hasattr(index, 'tolist'):
+                # Convert pandas Index or array-like to list
+                index_list = index.tolist()
+            else:
+                # Convert other iterables to list
+                index_list = list(index)
+            genomes = genomes.set_index(index_list)
             genomes.columns = colnames
             # genomes = genomes.rename_axis("Mutation Types", axis="columns")
 
@@ -766,7 +777,18 @@ def spa_analyze(
             listOfSignatures = devopts["listOfSignatures"]
             index = devopts["index"]
             colnames = devopts["colnames"]
-            genomes = genomes.set_index(index)
+            # Convert index to list to handle StringArray compatibility in Python 3.12+
+            # StringArray is unhashable and cannot be used directly with set_index
+            if isinstance(index, str):
+                # If it's a column name, use as is
+                index_list = index
+            elif hasattr(index, 'tolist'):
+                # Convert pandas Index or array-like to list
+                index_list = index.tolist()
+            else:
+                # Convert other iterables to list
+                index_list = list(index)
+            genomes = genomes.set_index(index_list)
             genomes.columns = colnames
             make_decomposition_plots = devopts["make_decomposition_plots"]
             # genomes = genomes.rename_axis("Mutation Types", axis="columns")
