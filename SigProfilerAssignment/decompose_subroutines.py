@@ -1125,7 +1125,19 @@ def make_final_solution(
         pass
 
     processAvg = pd.DataFrame(processAvg.astype(float))
-    processes = processAvg.set_index(index)
+    # Convert index to pandas Index to handle StringArray compatibility in Python 3.12+
+    # StringArray is unhashable and cannot be used directly with set_index
+    if isinstance(index, str):
+        processes = processAvg.set_index(index)
+    else:
+        # Convert to list first, then create pandas Index and assign directly
+        if hasattr(index, 'tolist'):
+            index_list = index.tolist()
+        else:
+            index_list = list(index)
+        # Assign index directly instead of using set_index to avoid column lookup
+        processes = processAvg.copy()
+        processes.index = pd.Index(index_list)
     processes.columns = allsigids
     processes = processes.rename_axis("MutationType", axis="columns")
     processes.to_csv(
@@ -1140,8 +1152,17 @@ def make_final_solution(
         index_label=[processes.columns.name],
     )
     exposureAvg = pd.DataFrame(exposureAvg.astype(int))
-    allsigids = np.array(allsigids)
-    exposures = exposureAvg.set_index(allsigids)
+    # Convert allsigids to list to handle StringArray compatibility in Python 3.12+
+    if isinstance(allsigids, str):
+        allsigids_list = allsigids
+    elif hasattr(allsigids, 'tolist'):
+        allsigids_list = allsigids.tolist()
+    else:
+        allsigids_list = list(allsigids)
+    allsigids = np.array(allsigids_list)
+    # Assign index directly instead of using set_index to avoid column lookup
+    exposures = exposureAvg.copy()
+    exposures.index = pd.Index(allsigids_list)
     exposures.columns = allcolnames
     exposures = exposures.T
     exposures = exposures.rename_axis("Samples", axis="columns")
@@ -1258,7 +1279,18 @@ def make_final_solution(
     if refit_denovo_signatures:
         try:
             process_std_error = pd.DataFrame(process_std_error)
-            processSTE = process_std_error.set_index(index)
+            # Convert index to pandas Index to handle StringArray compatibility in Python 3.12+
+            if isinstance(index, str):
+                processSTE = process_std_error.set_index(index)
+            else:
+                # Convert to list first, then create pandas Index and assign directly
+                if hasattr(index, 'tolist'):
+                    index_list = index.tolist()
+                else:
+                    index_list = list(index)
+                # Assign index directly instead of using set_index to avoid column lookup
+                processSTE = process_std_error.copy()
+                processSTE.index = pd.Index(index_list)
             processSTE.columns = allsigids
             processSTE = processSTE.rename_axis("MutationType", axis="columns")
             processSTE.to_csv(
@@ -1276,7 +1308,16 @@ def make_final_solution(
             pass
     if refit_denovo_signatures:
         try:
-            signature_stats = signature_stats.set_index(allsigids)
+            # Convert allsigids to list to handle StringArray compatibility in Python 3.12+
+            if isinstance(allsigids, str):
+                allsigids_list = allsigids
+            elif hasattr(allsigids, 'tolist'):
+                allsigids_list = allsigids.tolist()
+            else:
+                allsigids_list = list(allsigids)
+            # Assign index directly instead of using set_index to avoid column lookup
+            signature_stats = signature_stats.copy()
+            signature_stats.index = pd.Index(allsigids_list)
             signature_stats = signature_stats.rename_axis("Signatures", axis="columns")
             signature_stats.to_csv(
                 layer_directory

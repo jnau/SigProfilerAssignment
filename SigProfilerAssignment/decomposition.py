@@ -577,7 +577,19 @@ def spa_analyze(
             listOfSignatures = devopts["listOfSignatures"]
             index = devopts["index"]
             colnames = devopts["colnames"]
-            genomes = genomes.set_index(index)
+            # Convert index to pandas Index to handle StringArray compatibility in Python 3.12+
+            # StringArray is unhashable and cannot be used directly with set_index
+            if isinstance(index, str):
+                # If it's a column name, use set_index normally
+                genomes = genomes.set_index(index)
+            else:
+                # Convert to list first, then create pandas Index and assign directly
+                if hasattr(index, 'tolist'):
+                    index_list = index.tolist()
+                else:
+                    index_list = list(index)
+                # Assign index directly instead of using set_index to avoid column lookup
+                genomes.index = pd.Index(index_list)
             genomes.columns = colnames
             # genomes = genomes.rename_axis("Mutation Types", axis="columns")
 
@@ -766,7 +778,19 @@ def spa_analyze(
             listOfSignatures = devopts["listOfSignatures"]
             index = devopts["index"]
             colnames = devopts["colnames"]
-            genomes = genomes.set_index(index)
+            # Convert index to pandas Index to handle StringArray compatibility in Python 3.12+
+            # StringArray is unhashable and cannot be used directly with set_index
+            if isinstance(index, str):
+                # If it's a column name, use set_index normally
+                genomes = genomes.set_index(index)
+            else:
+                # Convert to list first, then create pandas Index and assign directly
+                if hasattr(index, 'tolist'):
+                    index_list = index.tolist()
+                else:
+                    index_list = list(index)
+                # Assign index directly instead of using set_index to avoid column lookup
+                genomes.index = pd.Index(index_list)
             genomes.columns = colnames
             make_decomposition_plots = devopts["make_decomposition_plots"]
             # genomes = genomes.rename_axis("Mutation Types", axis="columns")

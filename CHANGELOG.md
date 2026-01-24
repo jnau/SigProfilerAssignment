@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-01-23
+### Fixed
+- Fixed Python 3.12 compatibility issues with pandas StringArray in `set_index()` calls:
+  - Replaced `set_index()` with direct index assignment using `pd.Index()` to avoid StringArray unhashable type errors
+  - Fixed index restoration from `devopts` dictionary in both `denovo_refit_option` and `decompose_fit_option` paths
+  - Fixed index assignment in `make_final_solution()` for process matrices, exposure matrices, and signature statistics
+
 ## [1.1.2] - 2026-01-23
 ### Fixed
 - Fixed Python 3.12 compatibility issues with pandas DataFrame/Series indexing and method calls:
