@@ -329,33 +329,37 @@ def signature_decomposition(
         )
         # processAvg = processAvg.set_index('Type').rename_axis('MutationType')
     else:
-        try:
-            sigDatabase = pd.read_csv(signature_database, sep="\t", index_col=0)
-            # indx = sigDatabase.index()
-            if (
-                sigDatabase.shape[0] == 1536 and collapse_to_SBS96
-            ):  # collapse the 1596 context into 96 only for the deocmposition
-                sigDatabase = sigDatabase.groupby(sigDatabase.index.str[1:8]).sum()
+        # Support both filepath (str/Path) and DataFrame
+        if isinstance(signature_database, pd.DataFrame):
+            sigDatabase = signature_database
+        else:
+            try:
+                sigDatabase = pd.read_csv(signature_database, sep="\t", index_col=0)
+                # indx = sigDatabase.index()
+                if (
+                    sigDatabase.shape[0] == 1536 and collapse_to_SBS96
+                ):  # collapse the 1596 context into 96 only for the deocmposition
+                    sigDatabase = sigDatabase.groupby(sigDatabase.index.str[1:8]).sum()
 
-            elif (
-                sigDatabase.shape[0] == 288 and collapse_to_SBS96
-            ):  # collapse the 288 context into 96 only for the deocmposition
-                # sigDatabase = pd.DataFrame(processAvg, index=index)
-                sigDatabase = sigDatabase.groupby(sigDatabase.index.str[2:9]).sum()
+                elif (
+                    sigDatabase.shape[0] == 288 and collapse_to_SBS96
+                ):  # collapse the 288 context into 96 only for the deocmposition
+                    # sigDatabase = pd.DataFrame(processAvg, index=index)
+                    sigDatabase = sigDatabase.groupby(sigDatabase.index.str[2:9]).sum()
 
-            if (
-                sigDatabase.shape[0] == 78
-                or sigDatabase.shape[0] == 83
-                or sigDatabase.shape[0] == 48
-            ):
-                connected_sigs = False
-            lognote.write(
-                "##### Using a custom signature database for decomposition #####"
-            )
-        except:
-            sys.exit(
-                "Wrong format of signature database for decompose_fit, Please pass a text file of signatures in the format of COSMIC sig database"
-            )
+                if (
+                    sigDatabase.shape[0] == 78
+                    or sigDatabase.shape[0] == 83
+                    or sigDatabase.shape[0] == 48
+                ):
+                    connected_sigs = False
+                lognote.write(
+                    "##### Using a custom signature database for decomposition #####"
+                )
+            except:
+                sys.exit(
+                    "Wrong format of signature database for decompose_fit, Please pass a text file of signatures in the format of COSMIC sig database"
+                )
 
     sig_exclusion_list = [m_for_subgroups + items for items in sig_exclusion_list]
     lognote.write(
