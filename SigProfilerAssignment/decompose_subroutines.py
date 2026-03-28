@@ -320,7 +320,7 @@ def signature_decomposition(
     lognote.write("Context Type: {}\n".format(mtype))
     lognote.write("Genome Build: {}\n".format(genome_build))
 
-    if signature_database == None:
+    if signature_database is None:
         sigDatabase, signames, connected_sigs, genome_build = getProcessAvg(
             signatures,
             genome_build=genome_build,
