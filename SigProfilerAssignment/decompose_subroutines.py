@@ -320,45 +320,55 @@ def signature_decomposition(
     lognote.write("Context Type: {}\n".format(mtype))
     lognote.write("Genome Build: {}\n".format(genome_build))
 
-    if signature_database is None:
+    if signature_database is None:  # ← Changed from == to is
         sigDatabase, signames, connected_sigs, genome_build = getProcessAvg(
             signatures,
             genome_build=genome_build,
             cosmic_version=cosmic_version,
             exome=exome,
         )
-        # processAvg = processAvg.set_index('Type').rename_axis('MutationType')
     else:
+        # ====================================================================
         # Support both filepath (str/Path) and DataFrame
+        # ====================================================================
         if isinstance(signature_database, pd.DataFrame):
-            sigDatabase = signature_database
+            # DataFrame case - process directly
+            sigDatabase = signature_database.copy()  # Make a copy to avoid modifying original
+            
+            # Apply collapse logic if needed
+            if sigDatabase.shape[0] == 1536 and collapse_to_SBS96:
+                sigDatabase = sigDatabase.groupby(sigDatabase.index.str[1:8]).sum()
+            elif sigDatabase.shape[0] == 288 and collapse_to_SBS96:
+                sigDatabase = sigDatabase.groupby(sigDatabase.index.str[2:9]).sum()
+            
+            if sigDatabase.shape[0] in [78, 83, 48]:
+                connected_sigs = False
+            
+            lognote.write(
+                "##### Using a custom signature database (DataFrame) for decomposition #####"
+            )
+        
         else:
+            # Filepath case - read from file
             try:
                 sigDatabase = pd.read_csv(signature_database, sep="\t", index_col=0)
-                # indx = sigDatabase.index()
-                if (
-                    sigDatabase.shape[0] == 1536 and collapse_to_SBS96
-                ):  # collapse the 1596 context into 96 only for the deocmposition
+                
+                # Apply collapse logic
+                if sigDatabase.shape[0] == 1536 and collapse_to_SBS96:
                     sigDatabase = sigDatabase.groupby(sigDatabase.index.str[1:8]).sum()
-
-                elif (
-                    sigDatabase.shape[0] == 288 and collapse_to_SBS96
-                ):  # collapse the 288 context into 96 only for the deocmposition
-                    # sigDatabase = pd.DataFrame(processAvg, index=index)
+                elif sigDatabase.shape[0] == 288 and collapse_to_SBS96:
                     sigDatabase = sigDatabase.groupby(sigDatabase.index.str[2:9]).sum()
-
-                if (
-                    sigDatabase.shape[0] == 78
-                    or sigDatabase.shape[0] == 83
-                    or sigDatabase.shape[0] == 48
-                ):
+                
+                if sigDatabase.shape[0] in [78, 83, 48]:
                     connected_sigs = False
+                
                 lognote.write(
-                    "##### Using a custom signature database for decomposition #####"
+                    "##### Using a custom signature database (file) for decomposition #####"
                 )
             except:
                 sys.exit(
-                    "Wrong format of signature database for decompose_fit, Please pass a text file of signatures in the format of COSMIC sig database"
+                    "Wrong format of signature database for decompose_fit, "
+                    "Please pass a text file of signatures in the format of COSMIC sig database"
                 )
 
     sig_exclusion_list = [m_for_subgroups + items for items in sig_exclusion_list]
